@@ -28,26 +28,28 @@ Do NOT forget to grant access for your user profile.
 ## Create the credentials.json file
 This file will contain the connection information for both SFDC and MongoDB.
 
-    {
-        "salesforce": {
-            "target": "https://test.salesforce.com/",
-            "grant": {
-                "grant_type": "password",
-                "client_id": "<Consumer Key from connected app>",
-                "client_secret": "<Consumer Secret from connected app>",
-                "username": "<your username>",
-                "password": "<your password + security token if necessary>"
-            }
-        },
-        "mongodb": "<MongoDB connection string>"
-    }
+```json
+{
+    "salesforce": {
+        "target": "https://test.salesforce.com/",
+        "grant": {
+            "grant_type": "password",
+            "client_id": "<Consumer Key from connected app>",
+            "client_secret": "<Consumer Secret from connected app>",
+            "username": "<your username>",
+            "password": "<your password + security token if necessary>"
+        }
+    },
+    "mongodb": "<MongoDB connection string>"
+}
+```
 
 ## Start test run in SFDC
 Start a full local test execution on your target instance.
 
 ## Start the data collector locally
 Start the data collector process:
-        
+
     node src/index.js collect --credentials=../credentials.json
  
 Upon successful execution, you will receive messages similar to these:
