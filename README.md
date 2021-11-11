@@ -50,7 +50,7 @@ Start a full local test execution on your target instance.
 ## Start the data collector locally
 Start the data collector process:
 
-    node src/index.js collect --credentials=../credentials.json
+    node src/cli.js collect --credentials=../credentials.json
  
 Upon successful execution, you will receive messages similar to these:
 
@@ -67,7 +67,7 @@ When your test run is finished and you no longer receive new coverage records, s
 Once the data are accumulated in the local database, you can use then to build coverage report and/or test suites.
 The output of the following command is a set of XML files for the Metadata API:
 
-    node src/index.js build test-suites --credentials=../credentials.json --output-dir=./testSuites
+    node src/cli.js build test-suites --credentials=../credentials.json --output-dir=./testSuites
 To obtain a single HTML report file, the following command can be utilized:
         
-    node src/index.js build report --credentials=../credentials.json --output-dir=./coverageReport
+    node src/cli.js build report --credentials=../credentials.json --output-dir=./coverageReport
