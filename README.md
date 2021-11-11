@@ -6,6 +6,7 @@ The goal of this project is to provide a simple command-line tool with the follo
  - Provide output in the form of HTML report or metadata files that can be deployed to SFDC.
 
 # Operation
+![Apex Code Coverage record sample](docs/media/ApexCodeCoverage-sample.png)
 SFDC stores Apex code coverage information in the [ApexCodeCoverage](https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_apexcodecoverage.htm) object of the Tooling API.
 The information stored in this object are very detailed, there are some limitations though:
 
