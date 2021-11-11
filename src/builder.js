@@ -35,6 +35,12 @@ function testComparator(test1, test2) {
     return test1.coveredLines.size - test2.coveredLines.size;
 }
 
+function descending(comparator) {
+    return function(a, b) {
+        return -1 * comparator(a, b);
+    }
+}
+
 class TestSuite {
 
     tests = [];
@@ -45,6 +51,10 @@ class TestSuite {
         test.coveredLines.forEach(line => {
             this.coveredLines.add(line);
         });
+    }
+
+    sortByCoverage() {
+        this.tests.sort(descending(testComparator));
     }
 
 }
@@ -202,6 +212,7 @@ async function build(argv) {
                 .ele('style').txt(reportStyle).up().up()
         const body = report.ele('body').ele('h1').txt('Calculated Test Suites').up();
         coverageData.forEach(coverage => {
+            coverage.testSuite.sortByCoverage();
             const percentageEstimate = coverage.testSuite.coveredLines.size / coverage.allLines.size * 100;
             const tbody = body
                 .ele('table')
