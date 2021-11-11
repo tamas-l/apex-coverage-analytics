@@ -3,9 +3,9 @@
   "type": "module",
   "version": "0.0.2",
   "description": "A tool to analyze Apex code coverage, create reports and build test suites.",
-  "main": "./src/index.js",
+  "main": "./src/cli.js",
   "bin": {
-    "apex-coverage-analytics": "./src/index.js"
+    "apex-coverage-analytics": "./src/cli.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
