@@ -1,17 +1,22 @@
 {
-  "name": "apex-coverage-analyzer",
+  "name": "apex-coverage-analytics",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A tool to analyze Apex code coverage, create reports and build test suites.",
   "main": "./src/index.js",
   "bin": {
-	  "apex-coverage": "./src/index.js"
+    "apex-coverage-analytics": "./src/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tamas Laiszner",
   "license": "BSD-2-Clause",
+  "homepage": "https://github.com/tamas-l/apex-coverage-analyzer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tamas-l/apex-coverage-analyzer.git"
+  },
   "dependencies": {
     "fs": "^0.0.1-security",
     "mongodb": "^4.1.4",

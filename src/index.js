@@ -37,7 +37,6 @@ yargs(hideBin(process.argv))
             default: 75
         }),
         handler: (argv) => {
-            console.log(argv);
             build(argv).then();
         }
     }).option('credentials', {

@@ -146,11 +146,12 @@ async function build(argv) {
     ]);
     
     const coverageData = await aggregateResult.toArray();
-    await mongo.close();
     logger.log(`Retrieved aggregated test coverage data for ${coverageData.length} classes and triggers.`);
+    await mongo.close();
 
     const targetCoverage = argv.coverageThreshold / 100;
 
+    logger.log(`Buiding result set with coverage target ${targetCoverage}.`);
     coverageData.forEach(coverage => {
         coverage.allLines = new Set(coverage.allLines);
         coverage.tests.forEach(test => {
@@ -178,6 +179,7 @@ async function build(argv) {
     if (argv.type == 'test-suites') {
         coverageData.forEach(coverage => {
             const filePath = path.resolve(argv.outputDir, coverage.class.name + '.testSuite');
+            logger.log(`Writing ${filePath}.`);
             const file = fs.openSync(filePath, 'w');
             fs.writeFileSync(file, xmlbuilder.create({
                 ApexTestSuite: {
@@ -188,11 +190,9 @@ async function build(argv) {
             fs.closeSync(file);
         });
     } else if (argv.type == 'report') {
-        const filePath = path.resolve(argv.outputDir, `Apex Code Coverage Report.xhtml`);
-        const file = fs.openSync(filePath, 'w');
-        const report = xmlbuilder.create().ele('html').att('xmlns', 'http://www.w3.org/1999/xhtml')
+        const report = xmlbuilder.create().dtd({name: 'html'}).ele('html').att('xmlns', 'http://www.w3.org/1999/xhtml')
             .ele('head')
-                .ele('title').txt(`Apex Code Coverage Report ${new Date().toLocaleString()}`).up()
+                .ele('title').txt(`Apex Code Coverage Report ${new Date().toISOString()}`).up()
                 .ele('style').txt(reportStyle).up().up()
         const body = report.ele('body');
         coverageData.forEach(coverage => {
@@ -207,9 +207,14 @@ async function build(argv) {
                     .up()
                     .ele('tbody');
             coverage.testSuite.tests.forEach(test => {
-                tbody.ele('tr').ele('td').txt(test.name).up().ele('td').txt((test.coveredLines.size / coverage.allLines.size * 100).toFixed(1));
+                tbody.ele('tr')
+                    .ele('td').txt(test.name).up()
+                    .ele('td').txt((test.coveredLines.size / coverage.allLines.size * 100).toFixed(1));
             });
         });
+        const filePath = path.resolve(argv.outputDir, `Apex Code Coverage Report.xhtml`);
+        logger.log(`Writing ${filePath}.`);
+        const file = fs.openSync(filePath, 'w');
         fs.writeFileSync(file, report.end({ prettyPrint: true }));
         fs.closeSync(file);
     }
