@@ -12,7 +12,7 @@ SFDC stores Apex code coverage information in the [ApexCodeCoverage](https://dev
 The information stored in this object are very detailed, there are some limitations though:
 
  - The Tolling API does not provide sufficient querying capabilities to do meaningful aggregations on these data.
- - These records are not retained for long. Even under the duration of a test run they are periodically wiped out.
+ - The records are not retained for long. Even under the duration of a test run they are periodically wiped out.
 
 In order to overcome this, Apex coverage records are periodically fetched from SFDC and accumulated locally in MongoDB.
 
