@@ -150,12 +150,15 @@ async function build(argv) {
     await mongo.close();
 
     const targetCoverage = argv.coverageThreshold / 100;
+    const allTests  = new Map();
+    const utilizedTests = new Set();
 
     logger.log(`Buiding result set with coverage target ${targetCoverage}.`);
     coverageData.forEach(coverage => {
         coverage.allLines = new Set(coverage.allLines);
         coverage.tests.forEach(test => {
             test.coveredLines = new Set(test.coveredLines);
+            allTests.set(test.id, test);
         });
         coverage.testSuite = new TestSuite();
         while ((coverage.testSuite.coveredLines.size / coverage.allLines.size < targetCoverage) && coverage.tests.length > 0) {
@@ -164,6 +167,7 @@ async function build(argv) {
             const bestTest = coverage.tests.shift();
             if (bestTest.coveredLines.size > 0) {
                 coverage.testSuite.add(bestTest);
+                utilizedTests.add(bestTest.id);
             }
             // Update all test records to remove lines that are already covered by the test suite.
             coverage.tests.forEach(test => {
@@ -173,6 +177,8 @@ async function build(argv) {
             });
         }
     });
+
+    const unutilizedTests = Array.from(allTests.values()).filter(test => !utilizedTests.has(test.id));
 
     fs.mkdirSync(argv.outputDir, { recursive: true });
 
@@ -194,7 +200,7 @@ async function build(argv) {
             .ele('head')
                 .ele('title').txt(`Apex Code Coverage Report ${new Date().toISOString()}`).up()
                 .ele('style').txt(reportStyle).up().up()
-        const body = report.ele('body');
+        const body = report.ele('body').ele('h1').txt('Calculated Test Suites').up();
         coverageData.forEach(coverage => {
             const percentageEstimate = coverage.testSuite.coveredLines.size / coverage.allLines.size * 100;
             const tbody = body
@@ -212,6 +218,12 @@ async function build(argv) {
                     .ele('td').txt((test.coveredLines.size / coverage.allLines.size * 100).toFixed(1));
             });
         });
+        if (unutilizedTests.length > 0) {       
+            const unutilizedTestsList = body.ele('h1').txt('Unutilized test classes').up().ele('ul');
+            unutilizedTests.forEach(test => {
+                unutilizedTestsList.ele('li').txt(test.name);
+            });
+        }
         const filePath = path.resolve(argv.outputDir, `Apex Code Coverage Report.xhtml`);
         logger.log(`Writing ${filePath}.`);
         const file = fs.openSync(filePath, 'w');
