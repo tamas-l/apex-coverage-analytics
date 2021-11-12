@@ -176,7 +176,7 @@ async function build(argv) {
 
     if (argv.type == 'test-suites') {
         coverageData.forEach(coverage => {
-            const filePath = path.resolve(argv.outputDir, coverage.class.name + '.testSuite');
+            const filePath = path.resolve(argv.outputDir, coverage.name + '.testSuite');
             logger.log(`Writing ${filePath}.`);
             const file = fs.openSync(filePath, 'w');
             fs.writeFileSync(file, xmlbuilder.create({
