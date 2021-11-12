@@ -32,13 +32,7 @@ const reportStyle = `
 `;
 
 function testComparator(test1, test2) {
-    return test1.coveredLines.size - test2.coveredLines.size;
-}
-
-function descending(comparator) {
-    return function(a, b) {
-        return -1 * comparator(a, b);
-    }
+    return test2.coveredLines.size - test1.coveredLines.size;
 }
 
 class TestSuite {
@@ -51,10 +45,6 @@ class TestSuite {
         test.coveredLines.forEach(line => {
             this.coveredLines.add(line);
         });
-    }
-
-    sortByCoverage() {
-        this.tests.sort(descending(testComparator));
     }
 
 }
@@ -212,7 +202,6 @@ async function build(argv) {
                 .ele('style').txt(reportStyle).up().up()
         const body = report.ele('body').ele('h1').txt('Calculated Test Suites').up();
         coverageData.forEach(coverage => {
-            coverage.testSuite.sortByCoverage();
             const percentageEstimate = coverage.testSuite.coveredLines.size / coverage.allLines.size * 100;
             const tbody = body
                 .ele('table')
@@ -228,13 +217,11 @@ async function build(argv) {
                     .ele('td').txt(test.name).up()
                     .ele('td').txt((test.coveredLines.size / coverage.allLines.size * 100).toFixed(1));
             });
+        });    
+        const unutilizedTestsList = body.ele('h1').txt('Unutilized Test Classes').up().ele('ul');
+        unutilizedTests.forEach(test => {
+            unutilizedTestsList.ele('li').txt(test.name);
         });
-        if (unutilizedTests.length > 0) {       
-            const unutilizedTestsList = body.ele('h1').txt('Unutilized test classes').up().ele('ul');
-            unutilizedTests.forEach(test => {
-                unutilizedTestsList.ele('li').txt(test.name);
-            });
-        }
         const filePath = path.resolve(argv.outputDir, `Apex Code Coverage Report.xhtml`);
         logger.log(`Writing ${filePath}.`);
         const file = fs.openSync(filePath, 'w');

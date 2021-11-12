@@ -48,7 +48,7 @@ yargs(hideBin(process.argv))
         description: 'MongoDB database name to use',
         type: 'string',
         demandOption: true,
-        default: 'apex-coverage-analyzer'
+        default: 'apex-coverage-analytics'
     }).option('collection', {
         description: 'MongoDB collection name to use',
         type: 'string',
