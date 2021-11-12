@@ -188,7 +188,7 @@ async function build(argv) {
             fs.closeSync(file);
         });
     } else if (argv.type == 'report') {
-        const report = xmlbuilder.create().dtd({name: 'html'}).ele('html').att('xmlns', 'http://www.w3.org/1999/xhtml')
+        const report = xmlbuilder.create().dtd({name: 'html'}).ele('html').att('xmlns', 'http://www.w3.org/1999/xhtml').att('lang', 'en')
             .ele('head')
                 .ele('title').txt(`Apex Code Coverage Report ${new Date().toISOString()}`).up()
                 .ele('style').txt(reportStyle).up().up()
@@ -217,7 +217,7 @@ async function build(argv) {
         const filePath = path.resolve(argv.outputDir, `Apex Code Coverage Report.xhtml`);
         logger.log(`Writing ${filePath}.`);
         const file = fs.openSync(filePath, 'w');
-        fs.writeFileSync(file, report.end({ prettyPrint: true }));
+        fs.writeFileSync(file, report.end({ prettyPrint: true, headless: true }));
         fs.closeSync(file);
     }
 }
