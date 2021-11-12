@@ -83,7 +83,6 @@ async function build(argv) {
             $project: {
                 class: "$class",
                 testClass: "$testClass",
-                apexCodeCoverage: "$apexCodeCoverage",
                 coveredLines: {
                     $reduce: {
                         input: "$apexCodeCoverage",
@@ -103,8 +102,8 @@ async function build(argv) {
         {
             $group: {
                 _id: "$class.id",
-                class: {
-                    $first: "$class",
+                name: {
+                    $first: "$class.name",
                 },
                 testClasses: {
                     $push: "$$ROOT"
@@ -113,7 +112,7 @@ async function build(argv) {
         },
         {
             $project: {
-                class: "$class",
+                name: "$name",
                 testClasses: "$testClasses",
                 allLines: {
                     $reduce: {
@@ -126,7 +125,7 @@ async function build(argv) {
         },
         {
             $project: {
-                class: "$class",
+                name: "$name",
                 allLines: "$allLines",
                 tests: {
                     $map: {
@@ -141,7 +140,7 @@ async function build(argv) {
             }
         },
         {
-            $sort: { "class.name": 1 }
+            $sort: { "name": 1 }
         }
     ]);
     
@@ -207,7 +206,7 @@ async function build(argv) {
                 .ele('table')
                     .ele('thead').att('class', percentageEstimate < 75 ? 'fail' : 'pass')
                         .ele('tr')
-                            .ele('th').txt(coverage.class.name).up()
+                            .ele('th').txt(coverage.name).up()
                             .ele('th').txt(percentageEstimate.toFixed(1)).up()
                         .up()
                     .up()
