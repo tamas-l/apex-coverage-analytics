@@ -11,8 +11,8 @@ The goal of this project is to provide a simple command-line tool with the follo
 SFDC stores Apex code coverage information in the [ApexCodeCoverage](https://developer.salesforce.com/docs/atlas.en-us.api_tooling.meta/api_tooling/tooling_api_objects_apexcodecoverage.htm) object of the Tooling API.
 The information stored in this object are very detailed, there are some limitations though:
 
- - The Tolling API does not provide sufficient querying capabilities to do meaningful aggregations on these data.
- - The records are not retained for long. Even under the duration of a test run they are periodically wiped out.
+ - The Tolling API does not provide sufficient querying capabilities to do meaningful aggregations.
+ - The records are not retained for long. Even under the duration of a test run they are wiped out periodically.
 
 In order to overcome this, Apex coverage records are periodically fetched from SFDC and accumulated locally in MongoDB.
 
@@ -66,8 +66,8 @@ Upon successful execution, you will receive messages similar to these:
 When your test run is finished and you no longer receive new coverage records, stop the collector by SIGINT (Ctrl+C).
 
 ## Build reports and/or test suites
-Once the data are accumulated in the local database, you can use then to build coverage report and/or test suites.
-The output of the following command is a set of XML files for the Metadata API:
+The accumulated data can be used to build coverage report and/or test suites.
+The output of the following command is a set of XML files (.testSuite) for the Metadata API:
 
     node src/cli.js build test-suites --credentials=../credentials.json --output-dir=./testSuites
 To obtain a single HTML report file, the following command can be utilized:
