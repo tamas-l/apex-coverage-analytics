@@ -113,20 +113,13 @@ async function build(argv) {
         {
             $project: {
                 name: "$name",
-                testClasses: "$testClasses",
                 allLines: {
                     $reduce: {
                         input: "$testClasses",
                         initialValue: [],
                         in: { $setUnion: ["$$value", "$$this.allLines"] }
                     }
-                }
-            }
-        },
-        {
-            $project: {
-                name: "$name",
-                allLines: "$allLines",
+                },
                 tests: {
                     $map: {
                         input: "$testClasses",
