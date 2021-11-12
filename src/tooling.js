@@ -27,9 +27,6 @@ class Tooling {
     }
 
     async query(query, recordList) {
-        if (Math.random() > 0.8) {
-            throw 'test';
-        }
         const target = (query instanceof URL) ? query : this.getQueryURL(query);
         const response = await fetch(target, {
             method: 'GET',
