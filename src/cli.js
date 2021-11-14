@@ -2,6 +2,7 @@ import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 import { startPolling } from './collect.js'
 import { build } from './build.js'
+import { clean } from './clean.js'
 
 yargs(hideBin(process.argv))
     .command({
@@ -12,9 +13,7 @@ yargs(hideBin(process.argv))
             type: 'number',
             default: 300
         }),
-        handler: (argv) => {
-            startPolling(argv).then();
-        }
+        handler: (argv) => startPolling(argv)
     })
     .command({
         command: 'build <type>',
@@ -36,9 +35,11 @@ yargs(hideBin(process.argv))
             demandOption: true,
             default: 75
         }),
-        handler: (argv) => {
-            build(argv).then();
-        }
+        handler: (argv) => build(argv)
+    }).command({
+        command: 'clean',
+        desc: 'Remove all data stored in MongoDB collection.',
+        handler: (argv) => clean(argv)
     }).option('credentials', {
         description: 'link to JSON file containing credentials',
         type: 'string',
@@ -58,4 +59,3 @@ yargs(hideBin(process.argv))
     .demandCommand()
     .help()
     .argv;
-
