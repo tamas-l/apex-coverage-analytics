@@ -1,7 +1,7 @@
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
-import { startPolling } from './collector.js'
-import { build } from './builder.js'
+import { startPolling } from './collect.js'
+import { build } from './build.js'
 
 yargs(hideBin(process.argv))
     .command({
