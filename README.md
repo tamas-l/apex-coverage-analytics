@@ -5,6 +5,10 @@ The goal of this project is to provide a simple command-line tool with the follo
  - Run analytics on the data and construct the optimal test suites for individual Apex classes and triggers. (The test suite consisting of the least possible number of test classes in order to reach the configured coverage threshold.)
  - Provide output in the form of HTML report or metadata files that can be deployed to SFDC.
 
+Possible use cases for the results:
+ - Build automation: construct the list of unit tests to run for the current package. (Not in the scope of this project.)
+ - Identify test classes that do not contribute to the overall coverage. (This is part of the output report.)
+
 # Operation
 ![Apex Code Coverage record sample](docs/media/ApexCodeCoverage-sample.png)
 
@@ -17,7 +21,7 @@ The information stored in this object are very detailed, there are some limitati
 In order to overcome this, Apex coverage records are periodically fetched from SFDC and accumulated locally in MongoDB.
 
 # Usage
-Here are the steps to use this utility.
+It is a prerequisite to have [MongoDB](https://www.mongodb.com/) and [Node.js](https://nodejs.org/) installed.
 
 ## Create connected app
 A connected app must be created in your target SFDC instance.
@@ -25,7 +29,8 @@ A connected app must be created in your target SFDC instance.
 |--|--|
 | Selected OAuth Scopes | Manage user data via APIs (api) |
 | Callback URL | Not relevant as the username+password flow is used to connect |
-Do NOT forget to grant access for your user profile.
+
+:warning: Do NOT forget to grant access for your user profile.
 
 ## Create the credentials.json file
 This file will contain the connection information for both SFDC and MongoDB.
@@ -54,7 +59,7 @@ Start the data collector process:
 
     node src/cli.js collect --credentials=../credentials.json
  
-Upon successful execution, you will receive messages similar to these:
+Upon successful execution, you will receive messages similar to:
 
     [05:03:07] [LOG] Connected to MongoDB.
     [05:03:07] [LOG] Connected to Salesforce.
@@ -67,9 +72,20 @@ When your test run is finished and you no longer receive new coverage records, s
 
 ## Build reports and/or test suites
 The accumulated data can be used to build coverage report and/or test suites.
-The output of the following command is a set of XML files (.testSuite) for the Metadata API:
+The output of the following command is a set of XML files for the Metadata API:
 
     node src/cli.js build test-suites --credentials=../credentials.json --output-dir=./testSuites
-To obtain a single HTML report file, the following command can be utilized:
+
+To obtain a single HTML report file, use the following:
         
     node src/cli.js build report --credentials=../credentials.json --output-dir=./coverageReport
+
+# Commands
+
+Use `--help` to list the arguments for the following commands.
+
+| Name | Description |
+|--|--|
+| collect | Collect Apex code coverage data from Salesforce and accumulate them in local database. |
+| build | Process coverage data and build output (report or test suites). |
+| clean | Remove all coverage data data accumulated in MongoDB. |

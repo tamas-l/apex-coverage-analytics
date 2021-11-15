@@ -8,8 +8,7 @@ async function clean(argv) {
     await mongo.connect()
     logger.log('Connected to MongoDB.');
     const db = mongo.db(argv.db);
-    const collections = await db.collections();
-    const collection = collections.find(c => c.collectionName === argv.collection);
+    const collection = (await db.collections()).find(c => c.collectionName === argv.collection);
     if (collection) {
         await collection.drop();
         logger.log(`Dropped collection ${collection.namespace}.`);
